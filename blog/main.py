@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import schemas
+import schemas, models
+from database import engine
+import sqlalchemy
+
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
