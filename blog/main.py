@@ -26,7 +26,6 @@ def create(request: schemas.Blog, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_blog)
     return new_blog
-#request - whatever we pass from the browser or swagger. We need the request body so the data we pass is formatted the way we want.
 
 
 @app.get("/blog")
@@ -40,16 +39,17 @@ def show_single(id, response:Response, db: Session = Depends(get_db)):
     blog = db.query(models.Blog).filter(models.Blog.id == id).first()
     if not blog:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Blog with id {id} not available.")
-        #response.status_code = status.HTTP_404_NOT_FOUND
-        #return {"detail": f"Blog with id {id} not available."}
     return blog
 
 
 @app.delete("/blog/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def destroy(id, db: Session = Depends(get_db)):
-    blog = db.query(models.Blog).filter(models.Blog.id == id).delete(synchronize_session=False)
+    blog = db.query(models.Blog).filter(models.Blog.id == id)
+    if not blog.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Blog with id {id} not available.")
+    blog.delete(synchronize_session=False)
     db.commit()
-    return "done"
+    return "Done"
 
 
 @app.put('/blog/{id}', status_code=status.HTTP_202_ACCEPTED) 
