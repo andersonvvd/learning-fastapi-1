@@ -2,3 +2,14 @@ learning-fastapi
 .DS_Score
 __pycache__
 blog-env
+
+venv
+
+# VS Code Config
+.vscode
+
+# pycache files
+__pycache__
+.pytest_cache
+
+*.pyc
